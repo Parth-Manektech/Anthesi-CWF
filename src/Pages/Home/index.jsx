@@ -1,9 +1,7 @@
 import React from 'react';
 import SelectAddress from '../../Components/SelectAddress';
 
-function LogConsole() {
-
-
+function Home() {
     return (
         <section className="home">
             <div className='homecontainer'>
@@ -13,4 +11,4 @@ function LogConsole() {
     );
 }
 
-export default LogConsole;
+export default Home;
