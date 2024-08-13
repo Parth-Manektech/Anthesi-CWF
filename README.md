@@ -33,7 +33,7 @@ npm start
 This command starts the development server and you should see output similar to:
 ```
 Compiled successfully!
-You can now view log-console in the browser.
+You can now view Anthesi-CWF in the browser.
 
 Local:            http://localhost:3000
 On Your Network:  http://192.168.0.101:3000
