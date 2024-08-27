@@ -1,6 +1,21 @@
+.main-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+//Helper Styles
+@import url('./helper/_font.scss');
+
+
 // component Styles 
 @import url('./Components/_header.scss');
 @import url('./Components/_inputs.scss');
+@import url('./Components/_footer.scss');
 
 // Pages styles
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Col, Form, Row } from 'react-bootstrap'
 import { Controller, useForm } from 'react-hook-form';
 import Select from 'react-select';
 import { municipalityMockData, provinceMockData, stateMockData } from '../../Utils/Data/data';
+import { LeftArrowIcon, RightArrowIcon } from '../../Assets/SVGs';
 
 function SelectAddress() {
     const { control, formState: { errors }, handleSubmit, watch } = useForm({ mode: 'onSubmit' });
@@ -11,13 +11,25 @@ function SelectAddress() {
     const [municipalityData, setMunicipalityData] = useState([])
 
     const onSubmit = async (data) => {
-        console.log('data', data)
+        const FinalData = data?.municipality;
+        delete FinalData?.label
+        delete FinalData?.value
+
+        // Convert the data to JSON format
+        const jsonData = JSON.stringify(FinalData, null, 2);
+        const blob = new Blob([jsonData], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'address_data.json';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
 
     useEffect(() => {
         const stateData = stateMockData?.value?.matchingEntities?.map((element) => {
-            return { "label": element?.areaName, "value": element?.areaCode }
+            return { "label": element?.areaName, "value": element?.areaCode, ...element }
         })
         setStateData(stateData)
     }, [])
@@ -25,26 +37,26 @@ function SelectAddress() {
     useEffect(() => {
         if (watch('state')) {
             const provinceData = provinceMockData?.value?.matchingEntities?.filter((element) => element?.state?.areaCode === watch('state')?.value)
-                .map((e) => { return { "label": e?.geographicalPosDenom, "value": e?.geographicalPosCode } })
+                .map((e) => { return { "label": e?.geographicalPosDenom, "value": e?.geographicalPosCode, ...e } })
             setProvinceData(provinceData)
         }
         if (watch('province')) {
             const municipalityData = municipalityMockData?.value?.matchingEntities?.filter((element) => element?.province?.geographicalPosCode === watch('province')?.value)
-                .map((e) => { return { "label": e?.name, "value": e?.id } })
+                .map((e) => { return { "label": e?.name, "value": e?.id, ...e } })
             setMunicipalityData(municipalityData)
         }
 
     }, [watch('state'), watch('province')])
 
-    console.log('errors', errors)
     return (
         <>
-            <h2 className='mt-3'>Seleziona l&#39;indirizzo</h2>
-            <Form className='step-one mt-4' autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
-                <Row>
-                    <Col >
-                        <Form.Group className='form-group'>
-                            <Form.Label>Stato</Form.Label>
+            <h2 className='mt-3'>Selezionare Stato, Provincia e Comune</h2>
+            <h5 className='fw-normal'>ID richiesta: 12345</h5>
+            <form className='step-one mt-5' autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
+                <div className='row'>
+                    <div className='col' >
+                        <div className='form-group'>
+                            <label className='active' htmlFor='input-state'>Stato</label>
                             <Controller
                                 name='state'
                                 control={control}
@@ -57,8 +69,10 @@ function SelectAddress() {
                                 render={({ field: { onChange, value = [], ref } }) => (
                                     <Select
                                         ref={ref}
+                                        id='input-state'
                                         value={value}
-                                        isSearchable={false}
+                                        aria-label='Stato'
+                                        isSearchable={true}
                                         options={stateData}
                                         placeholder='Seleziona Stato..'
                                         className={`react-select border-0`}
@@ -71,18 +85,18 @@ function SelectAddress() {
                                 )}
                             />
                             {errors.state && (
-                                <Form.Control.Feedback type='invalid'>
+                                <div className='input-error'>
                                     {errors.state.message}
-                                </Form.Control.Feedback>
+                                </div>
                             )}
-                        </Form.Group>
-                    </Col>
-                </Row>
+                        </div>
+                    </div>
+                </div>
 
-                <Row className='mt-3'>
-                    <Col >
-                        <Form.Group className='form-group'>
-                            <Form.Label>Provincia</Form.Label>
+                <div className='mt-3 row'>
+                    <div className='col' >
+                        <div className='form-group'>
+                            <label className='active' htmlFor='input-province'>Provincia</label>
                             <Controller
                                 name='province'
                                 control={control}
@@ -95,8 +109,10 @@ function SelectAddress() {
                                 render={({ field: { onChange, value = [], ref } }) => (
                                     <Select
                                         ref={ref}
+                                        id='input-province'
                                         value={value}
-                                        isSearchable={false}
+                                        aria-label='Provincia'
+                                        isSearchable={true}
                                         options={provinceData}
                                         isDisabled={!watch('state')}
                                         placeholder='Seleziona Provincia..'
@@ -110,18 +126,18 @@ function SelectAddress() {
                                 )}
                             />
                             {errors.province && (
-                                <Form.Control.Feedback type='invalid'>
+                                <div className='input-error'>
                                     {errors.province.message}
-                                </Form.Control.Feedback>
+                                </div>
                             )}
-                        </Form.Group>
-                    </Col>
-                </Row>
+                        </div>
+                    </div>
+                </div>
 
-                <Row className='mt-3'>
-                    <Col >
-                        <Form.Group className='form-group'>
-                            <Form.Label>Comune</Form.Label>
+                <div className='row mt-3'>
+                    <div className='col' >
+                        <div className='form-group'>
+                            <label className='active' htmlFor='input-municipality'>Comune</label>
                             <Controller
                                 name='municipality'
                                 control={control}
@@ -134,8 +150,10 @@ function SelectAddress() {
                                 render={({ field: { onChange, value = [], ref } }) => (
                                     <Select
                                         ref={ref}
+                                        id='input-municipality'
                                         value={value}
-                                        isSearchable={false}
+                                        aria-label='Comune'
+                                        isSearchable={true}
                                         options={municipalityData}
                                         isDisabled={!watch('province')}
                                         placeholder='Seleziona Comune..'
@@ -149,20 +167,19 @@ function SelectAddress() {
                                 )}
                             />
                             {errors.municipality && (
-                                <Form.Control.Feedback type='invalid'>
+                                <div className='input-error'>
                                     {errors.municipality.message}
-                                </Form.Control.Feedback>
+                                </div>
                             )}
-                        </Form.Group>
-                    </Col>
-                </Row>
+                        </div>
+                    </div>
+                </div>
 
-                <Row className='mt-5'>
-                    <Button size='sm' variant="primary" type='submit' >
-                        invia
-                    </Button>
-                </Row>
-            </Form>
+                <div className='mb-5 d-flex justify-content-between'>
+                    <button type="button" className="btn btn-outline-secondary btn-xs"><span className='me-1'><LeftArrowIcon /></span>Indietro</button>
+                    <button type="submit" className="btn btn-primary btn-xs"> Prosegui <span className='ms-1'><RightArrowIcon /></span></button>
+                </div>
+            </form >
         </>
     )
 }

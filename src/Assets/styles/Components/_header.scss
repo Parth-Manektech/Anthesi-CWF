@@ -1,61 +1,43 @@
-.header {
-    // padding: 10px 50px 10px 70px;
-    box-shadow: 0px 2px 15px -7px rgba(0, 0, 0, 0.75);
+.SeccondHeaderBar {
+    background-color: #0066CC;
+    padding: 0 50px 0 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
 
-    .HearderBar {
-        background-color: #004891;
+    a {
+        color: #ffffff;
+        text-decoration: none;
+        padding: 7px 20px;
+    }
+}
 
-        .dropdown-toggle {
-            color: #cecece;
-        }
+.CWF-logo {
+    svg {
+        width: 60px !important;
+        height: 60px !important;
+    }
+}
+
+.menubar {
+    display: none;
+}
+
+@media screen and (max-width:768px) {
+    .SeccondHeaderBar {
+        display: none;
     }
 
-    .MainHeader {
-        background-color: #0066cc;
+    .menubar {
+        display: block;
+        cursor: pointer;
     }
 
-    .MainHeader,
-    .HearderBar {
-        padding: 10px 50px 10px 70px;
-        display: flex;
-        justify-content: space-between;
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-
-            .Bar-title {
-                color: #ffffff;
-            }
-
-            .SiteLogo {
-                cursor: pointer;
-            }
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            .H_line {
-                height: 90%;
-                width: 1px;
-                background-color: #cecece;
-            }
-
-            .HeaderSearchIcon {
-                cursor: pointer;
-                background-color: #cecece;
-                padding: 7px 10px;
-                border-radius: 50%;
-
-                svg {
-                    fill: #0066cc;
-                }
-            }
+    .CWF-logo {
+        svg {
+            width: 40px !important;
+            height: 40px !important;
         }
     }
-
 }

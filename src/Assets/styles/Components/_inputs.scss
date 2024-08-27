@@ -1,0 +1,29 @@
+.form-group label {
+    z-index: auto;
+}
+
+.select__control {
+    border-radius: 0% !important;
+    border-bottom: 1px solid #000 !important;
+    border-top: 0px !important;
+    border-right: 0px !important;
+    border-left: 0px !important;
+
+    .select__indicators {
+        display: none !important;
+    }
+
+    .select__input:focus {
+        box-shadow: none !important;
+    }
+
+    &--is-focused {
+        border-color: #000 !important;
+        box-shadow: none !important;
+    }
+
+    &--menu-is-open {
+        border-color: #000 !important;
+        box-shadow: none !important;
+    }
+}

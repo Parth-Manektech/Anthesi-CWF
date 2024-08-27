@@ -2,6 +2,7 @@ import React, { Suspense } from 'react'
 import PropTypes from 'prop-types'
 import { Loader } from '../Components/Loader'
 import Header from '../Components/Header'
+import Footer from '../Components/Footer'
 
 
 function MainLayout({ children }) {
@@ -9,8 +10,9 @@ function MainLayout({ children }) {
     <div className='main-layout'>
       <Header />
       <Suspense fallback={<Loader />}>
-        {children}
+        <main>{children}</main>
       </Suspense>
+      <Footer />
     </div>
   )
 }
