@@ -171,7 +171,7 @@ function Footer() {
                     </ul>
                 </div>
             </div>
-        </footer >
+        </footer>
     )
 }
 

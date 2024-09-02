@@ -5,7 +5,7 @@ import { municipalityMockData, provinceMockData, stateMockData } from '../../Uti
 import { LeftArrowIcon, RightArrowIcon } from '../../Assets/SVGs';
 
 function SelectAddress() {
-    const { control, formState: { errors }, handleSubmit, watch } = useForm({ mode: 'onSubmit' });
+    const { control, formState: { errors }, handleSubmit, watch, reset, setValue } = useForm({ mode: 'onSubmit' });
     const [stateData, setStateData] = useState([])
     const [provinceData, setProvinceData] = useState([])
     const [municipalityData, setMunicipalityData] = useState([])
@@ -79,7 +79,9 @@ function SelectAddress() {
                                         classNamePrefix='select'
                                         closeMenuOnSelect={true}
                                         onChange={(e) => {
-                                            onChange(e)
+                                            onChange(e);
+                                            setValue('municipality', '')
+                                            setValue('province', '');
                                         }}
                                     />
                                 )}
@@ -120,7 +122,8 @@ function SelectAddress() {
                                         classNamePrefix='select'
                                         closeMenuOnSelect={true}
                                         onChange={(e) => {
-                                            onChange(e)
+                                            onChange(e);
+                                            setValue('municipality', '')
                                         }}
                                     />
                                 )}
@@ -176,7 +179,7 @@ function SelectAddress() {
                 </div>
 
                 <div className='mb-5 d-flex justify-content-between'>
-                    <button type="button" className="btn btn-outline-secondary btn-xs"><span className='me-1'><LeftArrowIcon /></span>Indietro</button>
+                    <button type="button" onClick={() => reset({})} className="btn btn-outline-secondary btn-xs"><span className='me-1'><LeftArrowIcon /></span>Indietro</button>
                     <button type="submit" className="btn btn-primary btn-xs"> Prosegui <span className='ms-1'><RightArrowIcon /></span></button>
                 </div>
             </form >
