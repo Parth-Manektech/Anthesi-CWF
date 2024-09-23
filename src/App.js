@@ -6,13 +6,17 @@ import AllRoutes from './Routes/index'
 
 //import stylesheet 
 import './Assets/styles/main.scss'
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 function App() {
+  const queryClient = new QueryClient()
   return (
     <div className="App">
-      <Suspense fallback={<Loader />}>
-        <AllRoutes />
-      </Suspense>
+      <QueryClientProvider client={queryClient}>
+        <Suspense fallback={<Loader />}>
+          <AllRoutes />
+        </Suspense>
+      </QueryClientProvider>
     </div>
   );
 }

@@ -3,13 +3,23 @@ import { Controller, useForm } from 'react-hook-form';
 import Select from 'react-select';
 import { municipalityMockData, provinceMockData, stateMockData } from '../../Utils/Data/data';
 import { LeftArrowIcon, RightArrowIcon } from '../../Assets/SVGs';
+import { useQuery } from 'react-query';
+import { Getstate } from '../../Query/SelectAdress/selectAdress.query';
 
 function SelectAddress() {
     const { control, formState: { errors }, handleSubmit, watch, reset, setValue } = useForm({ mode: 'onSubmit' });
     const [stateData, setStateData] = useState([])
     const [provinceData, setProvinceData] = useState([])
     const [municipalityData, setMunicipalityData] = useState([])
+    const [stateData2, setStateData2] = useState([])
 
+    const paramsData = { term: '%' }
+    useQuery('getStateData', () => Getstate(paramsData), {
+        onSuccess: (res) => {
+            setStateData2(res);
+        }
+    })
+    console.log('stateData2', stateData2)
     const onSubmit = async (data) => {
         const FinalData = data?.municipality;
         delete FinalData?.label
@@ -25,7 +35,6 @@ function SelectAddress() {
         link.click();
         document.body.removeChild(link);
     }
-
 
     useEffect(() => {
         const stateData = stateMockData?.value?.matchingEntities?.map((element) => {
