@@ -1,31 +1,56 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import Select from 'react-select';
-import { municipalityMockData, provinceMockData, stateMockData } from '../../Utils/Data/data';
 import { LeftArrowIcon, RightArrowIcon } from '../../Assets/SVGs';
 import { useQuery } from 'react-query';
-import { Getstate } from '../../Query/SelectAdress/selectAdress.query';
+import { GetmunicipalityData, Getprovince, Getstate } from '../../Query/SelectAdress/selectAdress.query';
+import { Loader } from '../Loader';
 
 function SelectAddress() {
     const { control, formState: { errors }, handleSubmit, watch, reset, setValue } = useForm({ mode: 'onSubmit' });
     const [stateData, setStateData] = useState([])
     const [provinceData, setProvinceData] = useState([])
     const [municipalityData, setMunicipalityData] = useState([])
-    const [stateData2, setStateData2] = useState([])
 
-    const paramsData = { term: '%' }
-    useQuery('getStateData', () => Getstate(paramsData), {
-        onSuccess: (res) => {
-            setStateData2(res);
-        }
+    const { isFetching: isFetchingStateData, isLoading: isLoadingStateData } = useQuery('getStateData', () => Getstate(), {
+        select: (data) => data?.data?.value,
+        onSuccess: (response) => {
+            const statesOption = response?.matchingEntities?.map((element) => {
+                return { "label": element?.areaName, "value": element?.minCode, ...element }
+            })
+            setStateData(statesOption);
+        },
+        staleTime: 60 * 60 * 1000,
+        cacheTime: 60 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+    });
+
+    const { isLoading: isProvinceLoading, isFetching: isProvinceFetching } = useQuery(['getProvinceData', Number(watch('state')?.value)], () => Getprovince(watch('state')), {
+        enabled: !!watch('state'),
+        select: (data) => data?.data?.value,
+        onSuccess: (response) => {
+            const provinceData = response?.matchingEntities?.map((e) => { return { "label": e?.name, "value": e?.id, ...e } })
+            setProvinceData(provinceData)
+        },
+        refetchOnWindowFocus: false
     })
-    console.log('stateData2', stateData2)
+
+    const { isLoading: isMunicipalityLoading, isFetching: isMunicipalityFetching } = useQuery(['getMunicipalityData', watch('province')?.value], () => GetmunicipalityData(watch('state'), watch('province')), {
+        enabled: !!watch('province'),
+        select: (data) => data?.data?.value,
+        onSuccess: (response) => {
+            const municipality = response?.matchingEntities?.map((e) => { return { "label": e?.name, "value": e?.id, ...e } })
+            setMunicipalityData(municipality)
+        },
+        refetchOnWindowFocus: false,
+    })
+
+
     const onSubmit = async (data) => {
         const FinalData = data?.municipality;
-        delete FinalData?.label
-        delete FinalData?.value
-
-        // Convert the data to JSON format
+        delete FinalData?.label;
+        delete FinalData?.value;
         const jsonData = JSON.stringify(FinalData, null, 2);
         const blob = new Blob([jsonData], { type: 'application/json' });
         const link = document.createElement('a');
@@ -36,29 +61,9 @@ function SelectAddress() {
         document.body.removeChild(link);
     }
 
-    useEffect(() => {
-        const stateData = stateMockData?.value?.matchingEntities?.map((element) => {
-            return { "label": element?.areaName, "value": element?.areaCode, ...element }
-        })
-        setStateData(stateData)
-    }, [])
-
-    useEffect(() => {
-        if (watch('state')) {
-            const provinceData = provinceMockData?.value?.matchingEntities?.filter((element) => element?.state?.areaCode === watch('state')?.value)
-                .map((e) => { return { "label": e?.geographicalPosDenom, "value": e?.geographicalPosCode, ...e } })
-            setProvinceData(provinceData)
-        }
-        if (watch('province')) {
-            const municipalityData = municipalityMockData?.value?.matchingEntities?.filter((element) => element?.province?.geographicalPosCode === watch('province')?.value)
-                .map((e) => { return { "label": e?.name, "value": e?.id, ...e } })
-            setMunicipalityData(municipalityData)
-        }
-
-    }, [watch('state'), watch('province')])
-
     return (
         <>
+            {(isFetchingStateData || isLoadingStateData) && <Loader />}
             <h2 className='mt-3'>Selezionare Stato, Provincia e Comune</h2>
             <h5 className='fw-normal'>ID richiesta: 12345</h5>
             <form className='step-one mt-5' autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
@@ -126,8 +131,9 @@ function SelectAddress() {
                                         isSearchable={true}
                                         options={provinceData}
                                         isDisabled={!watch('state')}
+                                        isLoading={isProvinceLoading || isProvinceFetching}
                                         placeholder='Seleziona Provincia..'
-                                        className={`react-select border-0 `}
+                                        className={`react-select border-0`}
                                         classNamePrefix='select'
                                         closeMenuOnSelect={true}
                                         onChange={(e) => {
@@ -167,6 +173,7 @@ function SelectAddress() {
                                         aria-label='Comune'
                                         isSearchable={true}
                                         options={municipalityData}
+                                        isLoading={isMunicipalityLoading || isMunicipalityFetching}
                                         isDisabled={!watch('province')}
                                         placeholder='Seleziona Comune..'
                                         className={`react-select border-0 `}
@@ -192,6 +199,7 @@ function SelectAddress() {
                     <button type="submit" className="btn btn-primary btn-xs"> Prosegui <span className='ms-1'><RightArrowIcon /></span></button>
                 </div>
             </form >
+
         </>
     )
 }

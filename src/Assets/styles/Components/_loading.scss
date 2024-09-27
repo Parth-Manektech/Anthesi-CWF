@@ -1,0 +1,9 @@
+.mainLoading {
+    top: 0;
+    left: 0;
+    height: 100vh !important;
+    width: 100vw !important;
+    background-color: #0000004e;
+    z-index: 1000000000000;
+    position: fixed;
+}
