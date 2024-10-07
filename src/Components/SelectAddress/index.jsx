@@ -36,7 +36,7 @@ function SelectAddress() {
     });
 
     const { isLoading: isProvinceLoading, isFetching: isProvinceFetching } = useQuery(['getProvinceData', Number(watch('state')?.value)], () => Getprovince(watch('state')), {
-        enabled: !!watch('state'),
+        enabled: (!!watch('state') && watch('state')?.label === "Italia"),
         select: (data) => data?.data?.value,
         onSuccess: (response) => {
             let provinceData = response?.matchingEntities?.map((e) => { return { "label": e?.name, "value": e?.id, ...e } })
@@ -47,7 +47,7 @@ function SelectAddress() {
     })
 
     const { isLoading: isMunicipalityLoading, isFetching: isMunicipalityFetching } = useQuery(['getMunicipalityData', watch('province')?.value], () => GetmunicipalityData(watch('state'), watch('province')), {
-        enabled: !!watch('province'),
+        enabled: (!!watch('province') && watch('state')?.label === "Italia"),
         select: (data) => data?.data?.value,
         onSuccess: (response) => {
             let municipality = response?.matchingEntities?.map((e) => { return { "label": e?.itName, "value": e?.id, ...e } });
@@ -59,14 +59,13 @@ function SelectAddress() {
 
 
     const onSubmit = async (data) => {
-        console.log('data', data)
         let FinalData = data
         if (data?.state?.itName === "Italia") {
-            FinalData = data;
-        } else {
             FinalData = data?.municipality;
             delete FinalData?.label;
             delete FinalData?.value;
+        } else {
+            FinalData = data;
         }
         const jsonData = JSON.stringify(FinalData, null, 2);
         const blob = new Blob([jsonData], { type: 'application/json' });
@@ -80,10 +79,11 @@ function SelectAddress() {
 
 
     useEffect(() => {
-        if (watch('state')?.label === "Italia") {
+        if (watch('state')?.label !== "Italia" && watch('state') !== undefined) {
             setValue('province', 'EE')
         }
     }, [watch('state')])
+
     return (
         <>
             {(isFetchingStateData || isLoadingStateData) && <Loader />}
@@ -136,44 +136,7 @@ function SelectAddress() {
 
                 <div className='mt-3 row'>
                     <div className='col' >
-                        {(watch('state')?.label !== "Italia") ? <div className='form-group'>
-                            <label className='active' htmlFor='input-province'>Provincia</label>
-                            <Controller
-                                name='province'
-                                control={control}
-                                rules={{
-                                    required: {
-                                        value: true,
-                                        message: 'Seleziona la provincia'
-                                    }
-                                }}
-                                render={({ field: { onChange, value = [], ref } }) => (
-                                    <Select
-                                        ref={ref}
-                                        id='input-province'
-                                        value={value}
-                                        aria-label='Provincia'
-                                        isSearchable={true}
-                                        options={provinceData}
-                                        isDisabled={!watch('state')}
-                                        isLoading={isProvinceLoading || isProvinceFetching}
-                                        placeholder='Seleziona Provincia..'
-                                        className={`react-select border-0`}
-                                        classNamePrefix='select'
-                                        closeMenuOnSelect={true}
-                                        onChange={(e) => {
-                                            onChange(e);
-                                            setValue('municipality', '')
-                                        }}
-                                    />
-                                )}
-                            />
-                            {errors.province && (
-                                <div className='input-error'>
-                                    {errors.province.message}
-                                </div>
-                            )}
-                        </div> : (
+                        {(watch('state')?.label !== "Italia" && watch('state') !== undefined) ?
                             <div className="form-group">
                                 <label className="active" htmlFor="formGroupExampleInput3">Provincia</label>
                                 <Controller
@@ -201,79 +164,122 @@ function SelectAddress() {
                                     )}
                                 />
                             </div>
-                        )}
+                            : (
+                                <div className='form-group'>
+                                    <label className='active' htmlFor='input-province'>Provincia</label>
+                                    <Controller
+                                        name='province'
+                                        control={control}
+                                        rules={{
+                                            required: {
+                                                value: true,
+                                                message: 'Seleziona la provincia'
+                                            }
+                                        }}
+                                        render={({ field: { onChange, value = [], ref } }) => (
+                                            <Select
+                                                ref={ref}
+                                                id='input-province'
+                                                value={value}
+                                                aria-label='Provincia'
+                                                isSearchable={true}
+                                                options={provinceData}
+                                                isDisabled={!watch('state')}
+                                                isLoading={isProvinceLoading || isProvinceFetching}
+                                                placeholder='Seleziona Provincia..'
+                                                className={`react-select border-0`}
+                                                classNamePrefix='select'
+                                                closeMenuOnSelect={true}
+                                                onChange={(e) => {
+                                                    onChange(e);
+                                                    setValue('municipality', '')
+                                                }}
+                                            />
+                                        )}
+                                    />
+                                    {errors.province && (
+                                        <div className='input-error'>
+                                            {errors.province.message}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                     </div>
                 </div>
 
                 <div className='row mt-3'>
                     <div className='col' >
-                        {(watch('state')?.label !== "Italia") ? <div className='form-group'>
-                            <label className='active' htmlFor='input-municipality'>Comune</label>
-                            <Controller
-                                name='municipality'
-                                control={control}
-                                rules={{
-                                    required: {
-                                        value: true,
-                                        message: 'Seleziona Comune'
-                                    }
-                                }}
-                                render={({ field: { onChange, value = [], ref } }) => (
-                                    <Select
-                                        ref={ref}
-                                        id='input-municipality'
-                                        value={value}
-                                        aria-label='Comune'
-                                        isSearchable={true}
-                                        options={municipalityData}
-                                        isLoading={isMunicipalityLoading || isMunicipalityFetching}
-                                        isDisabled={!watch('province')}
-                                        placeholder='Seleziona Comune..'
-                                        className={`react-select border-0 `}
-                                        classNamePrefix='select'
-                                        closeMenuOnSelect={true}
-                                        onChange={(e) => {
-                                            onChange(e)
-                                        }}
-                                    />
+                        {(watch('state')?.label !== "Italia" && watch('state') !== undefined) ?
+                            <div className="form-group">
+                                <label className="active" htmlFor="formGroupExampleInput2">Comune</label>
+                                <Controller
+                                    name='municipality'
+                                    control={control}
+                                    rules={{
+                                        required: {
+                                            value: true,
+                                            message: 'Seleziona Comune'
+                                        }
+                                    }}
+                                    render={({ field: { onChange, value, ref } }) => (
+                                        <input
+                                            ref={ref}
+                                            type="text"
+                                            value={value}
+                                            className="form-control"
+                                            id="formGroupExampleInput2"
+                                            placeholder="Aggiungere Comune..."
+                                            onChange={(e) => {
+                                                onChange(e)
+                                            }}
+                                        />
+                                    )}
+                                />
+                                {errors.municipality && (
+                                    <div className='input-error'>
+                                        {errors.municipality.message}
+                                    </div>
                                 )}
-                            />
-                            {errors.municipality && (
-                                <div className='input-error'>
-                                    {errors.municipality.message}
-                                </div>
-                            )}
-                        </div> : <div className="form-group">
-                            <label className="active" htmlFor="formGroupExampleInput2">Comune</label>
-                            <Controller
-                                name='municipality'
-                                control={control}
-                                rules={{
-                                    required: {
-                                        value: true,
-                                        message: 'Seleziona Comune'
-                                    }
-                                }}
-                                render={({ field: { onChange, value, ref } }) => (
-                                    <input
-                                        ref={ref}
-                                        type="text"
-                                        value={value}
-                                        className="form-control"
-                                        id="formGroupExampleInput2"
-                                        placeholder="Aggiungere Comune..."
-                                        onChange={(e) => {
-                                            onChange(e)
-                                        }}
-                                    />
+                            </div>
+                            :
+                            <div className='form-group'>
+                                <label className='active' htmlFor='input-municipality'>Comune</label>
+                                <Controller
+                                    name='municipality'
+                                    control={control}
+                                    rules={{
+                                        required: {
+                                            value: true,
+                                            message: 'Seleziona Comune'
+                                        }
+                                    }}
+                                    render={({ field: { onChange, value = [], ref } }) => (
+                                        <Select
+                                            ref={ref}
+                                            id='input-municipality'
+                                            value={value}
+                                            aria-label='Comune'
+                                            isSearchable={true}
+                                            options={municipalityData}
+                                            isLoading={isMunicipalityLoading || isMunicipalityFetching}
+                                            isDisabled={!watch('province')}
+                                            placeholder='Seleziona Comune..'
+                                            className={`react-select border-0 `}
+                                            classNamePrefix='select'
+                                            closeMenuOnSelect={true}
+                                            onChange={(e) => {
+                                                onChange(e)
+                                            }}
+                                        />
+                                    )}
+                                />
+                                {errors.municipality && (
+                                    <div className='input-error'>
+                                        {errors.municipality.message}
+                                    </div>
                                 )}
-                            />
-                            {errors.municipality && (
-                                <div className='input-error'>
-                                    {errors.municipality.message}
-                                </div>
-                            )}
-                        </div>}
+                            </div>
+                        }
 
                     </div>
                 </div>
