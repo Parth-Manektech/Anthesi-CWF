@@ -18,6 +18,7 @@ Axios.interceptors.request.use(
     (req) => {
         req.headers['x-requested-with'] = 'XMLHttpRequest';
         req.headers['x-forwarded-host'] = 'api-developer01.elixdev.it';
+        req.headers['x-api-origin'] = 'api-developer01.elixdev.it';
         req.headers['x-api-key'] = 'VVN8vxCMTQG+TMLJ7Zx3qi8mhesfq6q/y5zJ8WZ3imc=';
         req.headers.host = 'http://api-developer01.elixdev.it/';
         return req;
