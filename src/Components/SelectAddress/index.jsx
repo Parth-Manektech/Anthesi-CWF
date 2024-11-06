@@ -7,10 +7,23 @@ import { GetmunicipalityData, Getprovince, Getstate } from '../../Query/SelectAd
 import { Loader } from '../Loader';
 
 function SelectAddress() {
-    const { control, formState: { errors }, handleSubmit, watch, reset, setValue } = useForm({ mode: 'onSubmit' });
     const [stateData, setStateData] = useState([])
     const [provinceData, setProvinceData] = useState([])
     const [municipalityData, setMunicipalityData] = useState([])
+    const [queryParams, setQueryParams] = useState({});
+    const { control, formState: { errors }, handleSubmit, watch, reset, setValue } = useForm({ mode: 'onSubmit', defaultValues: queryParams });
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const paramsObj = {};
+
+        params.forEach((value, key) => {
+            paramsObj[key] = value;
+        });
+
+        setQueryParams(paramsObj)
+    }, []);
+    // console.log('queryParams', queryParams);
 
     const { isFetching: isFetchingStateData, isLoading: isLoadingStateData } = useQuery('getStateData', () => Getstate(), {
         select: (data) => data?.data?.value,
@@ -59,14 +72,20 @@ function SelectAddress() {
 
 
     const onSubmit = async (data) => {
+        console.log('data', data)
         let FinalData = data
         if (data?.state?.itName === "Italia") {
-            FinalData = data?.municipality;
+            delete FinalData?.state
+            delete FinalData?.province
+            const municipalityData = data?.municipality
+            delete FinalData?.municipality
+            FinalData = { ...FinalData, ...municipalityData };
             delete FinalData?.label;
             delete FinalData?.value;
         } else {
             FinalData = data;
         }
+        console.log('FinalData', FinalData)
         const jsonData = JSON.stringify(FinalData, null, 2);
         const blob = new Blob([jsonData], { type: 'application/json' });
         const link = document.createElement('a');
@@ -81,6 +100,7 @@ function SelectAddress() {
     useEffect(() => {
         if (watch('state')?.label !== "Italia" && watch('state') !== undefined) {
             setValue('province', 'EE')
+            setValue(queryParams?.province, "EE")
         }
     }, [watch('state')])
 
@@ -90,6 +110,22 @@ function SelectAddress() {
             <h2 className='mt-3'>Selezionare Stato, Provincia e Comune</h2>
             <h5 className='fw-normal'>ID richiesta: 12345</h5>
             <form className='step-one mt-5' autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
+                {Object.entries(queryParams).map(([key, Value]) => {
+                    return <Controller
+                        name={Value}
+                        key={key}
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                            <input
+                                id={Value}
+                                name={Value}
+                                type="hidden"
+                                onChange={onChange}
+                                value={value}
+                            />
+                        )}
+                    />
+                })}
 
                 <div className='row'>
                     <div className='col'>
@@ -118,6 +154,12 @@ function SelectAddress() {
                                         closeMenuOnSelect={true}
                                         onChange={(e) => {
                                             onChange(e);
+                                            setValue(queryParams?.state, e?.label)
+                                            setValue(queryParams?.stateCode, e?.value)
+                                            setValue(queryParams?.province, "")
+                                            setValue(queryParams?.municipality, "")
+                                            setValue(queryParams?.municipalityCode, "")
+                                            setValue(queryParams?.municipalityJson, "")
                                             setValue('municipality', '')
                                             setValue('province', '');
                                         }}
@@ -158,7 +200,7 @@ function SelectAddress() {
                                             id="formGroupExampleInput3"
                                             placeholder="Aggiungi provincia..."
                                             onChange={(e) => {
-                                                onChange(e)
+                                                onChange(e);
                                             }}
                                         />
                                     )}
@@ -192,7 +234,11 @@ function SelectAddress() {
                                                 closeMenuOnSelect={true}
                                                 onChange={(e) => {
                                                     onChange(e);
+                                                    setValue(queryParams?.province, e?.label)
                                                     setValue('municipality', '')
+                                                    setValue(queryParams?.municipality, '')
+                                                    setValue(queryParams?.municipalityCode, '')
+                                                    setValue(queryParams?.municipalityJson, '')
                                                 }}
                                             />
                                         )}
@@ -230,7 +276,9 @@ function SelectAddress() {
                                             id="formGroupExampleInput2"
                                             placeholder="Aggiungere Comune..."
                                             onChange={(e) => {
-                                                onChange(e)
+                                                onChange(e);
+                                                setValue(queryParams?.municipality, e.target.value)
+                                                setValue(queryParams?.municipalityJson, JSON.stringify({ municipality: e.target.value }))
                                             }}
                                         />
                                     )}
@@ -269,6 +317,12 @@ function SelectAddress() {
                                             closeMenuOnSelect={true}
                                             onChange={(e) => {
                                                 onChange(e)
+                                                setValue(queryParams?.municipality, e?.label)
+                                                setValue(queryParams?.municipalityCode, e?.value)
+                                                const municipalityJsonobj = e;
+                                                delete municipalityJsonobj.label
+                                                delete municipalityJsonobj.value
+                                                setValue(queryParams?.municipalityJson, JSON.stringify(municipalityJsonobj))
                                             }}
                                         />
                                     )}
