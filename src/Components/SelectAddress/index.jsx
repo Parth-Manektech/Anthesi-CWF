@@ -109,7 +109,7 @@ function SelectAddress() {
             {(isFetchingStateData || isLoadingStateData) && <Loader />}
             <h2 className='mt-3'>Selezionare Stato, Provincia e Comune</h2>
             <h5 className='fw-normal'>ID richiesta: 12345</h5>
-            <form className='step-one mt-5' autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
+            <form className='step-one mt-5' autoComplete='off' onSubmit={handleSubmit(onSubmit)} action='https://developer01.elixdev.it/rwe2/ComeBackToElixAndSave'>
                 {Object.entries(queryParams).map(([key, Value]) => {
                     return <Controller
                         name={Value}
