@@ -11,7 +11,7 @@ function SelectAddress() {
     const [provinceData, setProvinceData] = useState([])
     const [municipalityData, setMunicipalityData] = useState([])
     const [queryParams, setQueryParams] = useState({});
-    const { control, formState: { errors }, handleSubmit, watch, reset, setValue } = useForm({ mode: 'onSubmit', defaultValues: queryParams });
+    const { control, formState: { errors }, watch, reset, setValue } = useForm({ mode: 'onSubmit', defaultValues: queryParams });
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -23,7 +23,7 @@ function SelectAddress() {
 
         setQueryParams(paramsObj)
     }, []);
-    // console.log('queryParams', queryParams);
+
 
     const { isFetching: isFetchingStateData, isLoading: isLoadingStateData } = useQuery('getStateData', () => Getstate(), {
         select: (data) => data?.data?.value,
@@ -71,30 +71,30 @@ function SelectAddress() {
     })
 
 
-    const onSubmit = async (data) => {
-        console.log('data', data)
-        let FinalData = data
-        if (data?.state?.itName === "Italia") {
-            delete FinalData?.state
-            delete FinalData?.province
-            const municipalityData = data?.municipality
-            delete FinalData?.municipality
-            FinalData = { ...FinalData, ...municipalityData };
-            delete FinalData?.label;
-            delete FinalData?.value;
-        } else {
-            FinalData = data;
-        }
-        console.log('FinalData', FinalData)
-        const jsonData = JSON.stringify(FinalData, null, 2);
-        const blob = new Blob([jsonData], { type: 'application/json' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'address_data.json';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
+    // const onSubmit = async (data) => {
+    //     console.log('data', data)
+    //     let FinalData = data
+    //     if (data?.state?.itName === "Italia") {
+    //         delete FinalData?.state
+    //         delete FinalData?.province
+    //         const municipalityData = data?.municipality
+    //         delete FinalData?.municipality
+    //         FinalData = { ...FinalData, ...municipalityData };
+    //         delete FinalData?.label;
+    //         delete FinalData?.value;
+    //     } else {
+    //         FinalData = data;
+    //     }
+    //     console.log('FinalData', FinalData)
+    //     const jsonData = JSON.stringify(FinalData, null, 2);
+    //     const blob = new Blob([jsonData], { type: 'application/json' });
+    //     const link = document.createElement('a');
+    //     link.href = URL.createObjectURL(blob);
+    //     link.download = 'address_data.json';
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+    // }
 
 
     useEffect(() => {
@@ -109,7 +109,7 @@ function SelectAddress() {
             {(isFetchingStateData || isLoadingStateData) && <Loader />}
             <h2 className='mt-3'>Selezionare Stato, Provincia e Comune</h2>
             <h5 className='fw-normal'>ID richiesta: 12345</h5>
-            <form className='step-one mt-5' autoComplete='off' onSubmit={handleSubmit(onSubmit)} action='https://developer01.elixdev.it/rwe2/ComeBackToElixAndSave'>
+            <form className='step-one mt-5' id="CWF-form" autoComplete='off' method="post" action='https://developer01.elixdev.it/rwe2/ComeBackToElixAndSave'>
                 {Object.entries(queryParams).map(([key, Value]) => {
                     return <Controller
                         name={Value}
@@ -341,7 +341,7 @@ function SelectAddress() {
 
                 <div className='mb-5 d-flex justify-content-between'>
                     <button type="button" onClick={() => reset({})} className="btn btn-outline-secondary btn-xs"><span className='me-1'><LeftArrowIcon /></span>Indietro</button>
-                    <button type="submit" className="btn btn-primary btn-xs"> Prosegui <span className='ms-1'><RightArrowIcon /></span></button>
+                    <button type="submit" form="CWF-form" className="btn btn-primary btn-xs"> Prosegui <span className='ms-1'><RightArrowIcon /></span></button>
                 </div>
             </form >
 
