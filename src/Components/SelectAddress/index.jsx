@@ -104,6 +104,19 @@ function SelectAddress() {
         }
     }, [watch('state')])
 
+    // function logFormData(e) {
+    //     e.preventDefault()
+    //     const form = document.getElementById('CWF-form');
+    //     const formData = new FormData(form);
+
+    //     // Log form data key-value pairs
+    //     for (let pair of formData.entries()) {
+    //         console.log(pair[0] + ': ' + pair[1]);
+    //     }
+
+    //     return false;
+    // }
+
     return (
         <>
             {(isFetchingStateData || isLoadingStateData) && <Loader />}
@@ -111,20 +124,23 @@ function SelectAddress() {
             <h5 className='fw-normal'>ID richiesta: 12345</h5>
             <form className='step-one mt-5' id="CWF-form" autoComplete='off' method="post" action='https://developer01.elixdev.it/rwe2/ComeBackToElixAndSave'>
                 {Object.entries(queryParams).map(([key, Value]) => {
-                    return <Controller
-                        name={Value}
-                        key={key}
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <input
-                                id={Value}
-                                name={Value}
-                                type="hidden"
-                                onChange={onChange}
-                                value={value}
-                            />
-                        )}
-                    />
+                    const regex = /^COL.{4}$/;
+                    if (regex.test(Value)) {
+                        return <Controller
+                            name={Value}
+                            key={key}
+                            control={control}
+                            render={({ field: { onChange, value } }) => (
+                                <input
+                                    id={Value}
+                                    name={Value}
+                                    type="hidden"
+                                    onChange={onChange}
+                                    value={value}
+                                />
+                            )}
+                        />
+                    }
                 })}
 
                 <div className='row'>
@@ -154,12 +170,15 @@ function SelectAddress() {
                                         closeMenuOnSelect={true}
                                         onChange={(e) => {
                                             onChange(e);
-                                            setValue(queryParams?.state, e?.label)
-                                            setValue(queryParams?.stateCode, e?.value)
-                                            setValue(queryParams?.province, "")
-                                            setValue(queryParams?.municipality, "")
-                                            setValue(queryParams?.municipalityCode, "")
-                                            setValue(queryParams?.municipalityJson, "")
+                                            if (queryParams) {
+                                                setValue(queryParams?.state, e?.label)
+                                                setValue(queryParams?.stateCode, e?.value)
+                                                setValue(queryParams?.province, "")
+                                                setValue(queryParams?.municipality, "")
+                                                setValue(queryParams?.municipalityCode, "")
+                                                setValue(queryParams?.municipalityJson, "")
+                                            }
+
                                             setValue('municipality', '')
                                             setValue('province', '');
                                         }}
@@ -234,11 +253,13 @@ function SelectAddress() {
                                                 closeMenuOnSelect={true}
                                                 onChange={(e) => {
                                                     onChange(e);
-                                                    setValue(queryParams?.province, e?.label)
+                                                    if (queryParams) {
+                                                        setValue(queryParams?.province, e?.label)
+                                                        setValue(queryParams?.municipality, '')
+                                                        setValue(queryParams?.municipalityCode, '')
+                                                        setValue(queryParams?.municipalityJson, '')
+                                                    }
                                                     setValue('municipality', '')
-                                                    setValue(queryParams?.municipality, '')
-                                                    setValue(queryParams?.municipalityCode, '')
-                                                    setValue(queryParams?.municipalityJson, '')
                                                 }}
                                             />
                                         )}
@@ -277,8 +298,10 @@ function SelectAddress() {
                                             placeholder="Aggiungere Comune..."
                                             onChange={(e) => {
                                                 onChange(e);
-                                                setValue(queryParams?.municipality, e.target.value)
-                                                setValue(queryParams?.municipalityJson, JSON.stringify({ municipality: e.target.value }))
+                                                if (queryParams) {
+                                                    setValue(queryParams?.municipality, e.target.value)
+                                                    setValue(queryParams?.municipalityJson, JSON.stringify({ municipality: e.target.value }))
+                                                }
                                             }}
                                         />
                                     )}
@@ -317,12 +340,14 @@ function SelectAddress() {
                                             closeMenuOnSelect={true}
                                             onChange={(e) => {
                                                 onChange(e)
-                                                setValue(queryParams?.municipality, e?.label)
-                                                setValue(queryParams?.municipalityCode, e?.value)
-                                                const municipalityJsonobj = e;
-                                                delete municipalityJsonobj.label
-                                                delete municipalityJsonobj.value
-                                                setValue(queryParams?.municipalityJson, JSON.stringify(municipalityJsonobj))
+                                                if (queryParams) {
+                                                    setValue(queryParams?.municipality, e?.label)
+                                                    setValue(queryParams?.municipalityCode, e?.value)
+                                                    const municipalityJsonobj = e;
+                                                    delete municipalityJsonobj.label
+                                                    delete municipalityJsonobj.value
+                                                    setValue(queryParams?.municipalityJson, JSON.stringify(municipalityJsonobj))
+                                                }
                                             }}
                                         />
                                     )}
