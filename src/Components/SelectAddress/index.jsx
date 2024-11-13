@@ -11,19 +11,28 @@ function SelectAddress() {
     const [provinceData, setProvinceData] = useState([])
     const [municipalityData, setMunicipalityData] = useState([])
     const [queryParams, setQueryParams] = useState({});
+    const [queryParamsInput, setQueryParamsInput] = useState({});
     const { control, formState: { errors }, watch, reset, setValue } = useForm({ mode: 'onSubmit', defaultValues: queryParams });
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const paramsObj = {};
+        const noChangeInputParams = {};
+
+        const regex = /^COL.{4}$/;
+
 
         params.forEach((value, key) => {
-            paramsObj[key] = value;
+            if (regex.test(value)) {
+                paramsObj[key] = value;
+            } else {
+                noChangeInputParams[key] = value;
+            }
         });
 
-        setQueryParams(paramsObj)
+        setQueryParams(paramsObj);
+        setQueryParamsInput(noChangeInputParams);
     }, []);
-
 
     const { isFetching: isFetchingStateData, isLoading: isLoadingStateData } = useQuery('getStateData', () => Getstate(), {
         select: (data) => data?.data?.value,
@@ -123,20 +132,43 @@ function SelectAddress() {
             <h5 className='fw-normal'>ID richiesta: 12345</h5>
             <form className='step-one mt-5' id="CWF-form" autoComplete='off' method="post" action='https://developer01.elixdev.it/rwe2/ComeBackToElixAndSave'>
                 {Object.entries(queryParams).map(([key, Value]) => {
-                    return <Controller
-                        name={Value}
-                        key={key}
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <input
-                                id={Value}
-                                name={Value}
-                                type="hidden"
-                                onChange={onChange}
-                                value={value}
-                            />
-                        )}
-                    />
+                    const regex = /^COL.{4}$/;
+                    if (regex.test(Value)) {
+                        return <Controller
+                            name={Value}
+                            key={key}
+                            control={control}
+                            render={({ field: { onChange, value } }) => (
+                                <input
+                                    id={Value}
+                                    name={Value}
+                                    type="hidden"
+                                    onChange={onChange}
+                                    value={value}
+                                />
+                            )}
+                        />
+                    }
+                })}
+
+                {Object.entries(queryParamsInput).map(([key, Value]) => {
+                    const regex = /^COL.{4}$/;
+                    if (!regex.test(Value)) {
+                        return <Controller
+                            name={key}
+                            key={key}
+                            control={control}
+                            render={({ field: { onChange } }) => (
+                                <input
+                                    id={key}
+                                    name={key}
+                                    type="hidden"
+                                    onChange={onChange}
+                                    value={Value}
+                                />
+                            )}
+                        />
+                    }
                 })}
 
                 <div className='row'>
