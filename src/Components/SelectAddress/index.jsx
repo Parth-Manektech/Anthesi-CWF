@@ -113,8 +113,7 @@ function SelectAddress() {
     //     for (let pair of formData.entries()) {
     //         console.log(pair[0] + ': ' + pair[1]);
     //     }
-
-    //     return false;
+    //     return true;
     // }
 
     return (
@@ -124,23 +123,20 @@ function SelectAddress() {
             <h5 className='fw-normal'>ID richiesta: 12345</h5>
             <form className='step-one mt-5' id="CWF-form" autoComplete='off' method="post" action='https://developer01.elixdev.it/rwe2/ComeBackToElixAndSave'>
                 {Object.entries(queryParams).map(([key, Value]) => {
-                    const regex = /^COL.{4}$/;
-                    if (regex.test(Value)) {
-                        return <Controller
-                            name={Value}
-                            key={key}
-                            control={control}
-                            render={({ field: { onChange, value } }) => (
-                                <input
-                                    id={Value}
-                                    name={Value}
-                                    type="hidden"
-                                    onChange={onChange}
-                                    value={value}
-                                />
-                            )}
-                        />
-                    }
+                    return <Controller
+                        name={Value}
+                        key={key}
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                            <input
+                                id={Value}
+                                name={Value}
+                                type="hidden"
+                                onChange={onChange}
+                                value={value}
+                            />
+                        )}
+                    />
                 })}
 
                 <div className='row'>
