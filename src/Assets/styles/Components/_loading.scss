@@ -1,9 +1,51 @@
 .mainLoading {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
     top: 0;
     left: 0;
     height: 100vh !important;
     width: 100vw !important;
-    background-color: #0000004e;
-    z-index: 1000000000000;
-    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.progress-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none !important;
+}
+
+.loader-icon {
+    font-size: 20px;
+    /* Starting size */
+    color: #000;
+    animation: spin 1s infinite linear;
+}
+
+/* You can set minSize, maxSize with media queries or customize this further */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .loader-icon {
+        font-size: 40px;
+        /* Larger size on larger screens */
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .loader-icon {
+        font-size: 70px;
+        /* Maximum size */
+    }
 }

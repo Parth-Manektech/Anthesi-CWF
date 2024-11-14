@@ -6,6 +6,7 @@ import AllRoutes from './Routes/index'
 
 //import stylesheet 
 import './Assets/styles/main.scss'
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 function App() {
