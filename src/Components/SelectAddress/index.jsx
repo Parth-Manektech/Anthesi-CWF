@@ -153,7 +153,7 @@ function SelectAddress() {
 
                 {Object.entries(queryParamsInput).map(([key, Value]) => {
                     const regex = /^COL.{4}$/;
-                    if (!regex.test(Value)) {
+                    if (!regex.test(Value) && !regex.test(key)) {
                         return <Controller
                             name={key}
                             key={key}
