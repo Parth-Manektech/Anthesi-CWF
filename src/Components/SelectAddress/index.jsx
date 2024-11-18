@@ -332,7 +332,7 @@ function SelectAddress() {
                                                 onChange(e);
                                                 if (queryParams) {
                                                     setValue(queryParams?.municipality, e.target.value)
-                                                    setValue(queryParams?.municipalityJson, JSON.stringify({ municipality: e.target.value }))
+                                                    setValue(queryParams?.municipalityJson, JSON.stringify({ itName: e.target.value, name: e.target.value }))
                                                 }
                                             }}
                                         />
