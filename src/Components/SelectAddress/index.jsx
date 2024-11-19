@@ -5,6 +5,7 @@ import { LeftArrowIcon, RightArrowIcon } from '../../Assets/SVGs';
 import { useQuery } from 'react-query';
 import { GetmunicipalityData, Getprovince, Getstate } from '../../Query/SelectAdress/selectAdress.query';
 import { Loader } from '../Loader';
+// import { Collapse } from 'bootstrap-italia';
 
 function SelectAddress() {
     const [stateData, setStateData] = useState([])
@@ -332,7 +333,22 @@ function SelectAddress() {
                                                 onChange(e);
                                                 if (queryParams) {
                                                     setValue(queryParams?.municipality, e.target.value)
-                                                    setValue(queryParams?.municipalityJson, JSON.stringify({ itName: e.target.value, name: e.target.value }))
+                                                    const Time = new Date().toLocaleTimeString([], { hour12: false });
+                                                    const Day = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
+                                                    const FinalMunicipalityJSON = {
+                                                        "restService": {
+                                                            "result": {
+                                                                "value": { itName: e.target.value, name: e.target.value }
+                                                            },
+                                                            "invocation": {
+                                                                "date": {
+                                                                    "time": Time,
+                                                                    "date": Day
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    setValue(queryParams?.municipalityJson, JSON.stringify(FinalMunicipalityJSON))
                                                 }
                                             }}
                                         />
@@ -372,13 +388,29 @@ function SelectAddress() {
                                             closeMenuOnSelect={true}
                                             onChange={(e) => {
                                                 onChange(e)
+                                                const Time = new Date().toLocaleTimeString([], { hour12: false });
+                                                const Day = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
                                                 if (queryParams) {
                                                     setValue(queryParams?.municipality, e?.label)
                                                     setValue(queryParams?.municipalityCode, e?.value)
                                                     const municipalityJsonobj = e;
                                                     delete municipalityJsonobj.label
                                                     delete municipalityJsonobj.value
-                                                    setValue(queryParams?.municipalityJson, JSON.stringify(municipalityJsonobj))
+
+                                                    const FinalMunicipalityJSON = {
+                                                        "restService": {
+                                                            "result": {
+                                                                "value": municipalityJsonobj
+                                                            },
+                                                            "invocation": {
+                                                                "date": {
+                                                                    "time": Time,
+                                                                    "date": Day
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    setValue(queryParams?.municipalityJson, JSON.stringify(FinalMunicipalityJSON))
                                                 }
                                             }}
                                         />
