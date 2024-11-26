@@ -1,11 +1,27 @@
+@import '../helper/_theme.scss';
+
+
 .footer {
     color: white;
     margin-top: auto;
+
     // font-size: 10px !important;
+    .it-footer-main {
+        background-color: $primary--color;
+    }
+
+    .it-footer-small-prints {
+        background-color: $secondary--color;
+    }
 
     .Link-button {
-        color: #0066CC;
+        color: #ffffff;
+        font-weight: bolder;
         cursor: pointer;
+    }
+
+    .LinkIcon {
+        fill: #fff;
     }
 
     a {

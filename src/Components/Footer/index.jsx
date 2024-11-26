@@ -24,7 +24,7 @@ function Footer() {
                                 </div>
                             </div>
                             <div className='Link-button mb-3 d-flex d-sm-none align-items-center' onClick={() => setLinkToggle(!linkToggle)}>
-                                {linkToggle ? <SortDown className='mb-1' height={15} width={15} fill='#0066CC' /> : <CaretRight height={15} width={15} fill='#0066CC' />} Link
+                                {linkToggle ? <SortDown className='mb-1 LinkIcon' height={15} width={15} /> : <CaretRight height={15} width={15} className='LinkIcon' />} Link
                             </div>
 
                             <div className={`${!linkToggle ? 'd-none' : 'd-inline'} d-sm-inline col-lg-2 col-md-2 col-sm-6 pb-2`}>

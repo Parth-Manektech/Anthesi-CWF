@@ -33,7 +33,7 @@ function Header() {
                                     </div>
                                     <a href="#" className="btn btn-primary btn-icon btn-full">
                                         <span className="rounded-icon">
-                                            <UserLineIcon fill="#0066CC" />
+                                            <UserLineIcon className='userLineIcon' />
                                         </span>
                                         <span className="d-none d-lg-block">Accedi all&#39;area personale</span>
                                     </a>
@@ -87,8 +87,8 @@ function Header() {
                                     </div>
                                     <div className="it-search-wrapper">
                                         <span className="d-none d-md-block">Cerca</span>
-                                        <a className="search-link rounded-icon" aria-label="Cerca nel sito" href="#">
-                                            <SearchIcon />
+                                        <a className="rounded-icon" aria-label="Cerca nel sito" href="#">
+                                            <SearchIcon className='SearchIcon' />
                                         </a>
                                     </div>
                                 </div>

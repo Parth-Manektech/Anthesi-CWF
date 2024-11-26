@@ -1,5 +1,22 @@
+@import '../helper/_theme.scss';
+
+.it-header-slim-wrapper {
+    background-color: $secondary--color;
+}
+
+.it-header-center-wrapper {
+    background-color: $primary--color;
+}
+
+.userLineIcon {
+    fill: $primary--color;
+}
+
+.SearchIcon {
+    fill: $primary--color !important;
+}
+
 .SeccondHeaderBar {
-    background-color: #0066CC;
     padding: 0 50px 0 50px;
     display: flex;
     justify-content: space-between;

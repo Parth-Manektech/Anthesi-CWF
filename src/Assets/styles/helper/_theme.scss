@@ -1,0 +1,13 @@
+$primary--color: #06c;
+$secondary--color: #0059b3;
+
+// $primary--color: rgb(204, 0, 0);
+// $secondary--color: #b30000;
+
+.btn-primary {
+    background-color: $primary--color;
+
+    &:hover {
+        background-color: $secondary--color;
+    }
+}
