@@ -11,7 +11,7 @@ function Footer() {
                         <div className="row">
                             <div className="col-lg-4 col-md-4 col-sm-6 pb-2">
                                 <h4>
-                                    <a href="#" title="Amministrazione">Amministrazione</a>
+                                    <a>Amministrazione</a>
                                 </h4>
                                 <div className="link-list-wrapper">
                                     <ul className="footer-list link-list clearfix">
@@ -29,7 +29,7 @@ function Footer() {
 
                             <div className={`${!linkToggle ? 'd-none' : 'd-inline'} d-sm-inline col-lg-2 col-md-2 col-sm-6 pb-2`}>
                                 <h4>
-                                    <a href="#" title="Vai alla pagina: Servizi">Servizi</a>
+                                    <a>Servizi</a>
                                 </h4>
                                 <div className="link-list-wrapper">
                                     <ul className="footer-list link-list clearfix">
@@ -44,7 +44,7 @@ function Footer() {
                             </div>
                             <div className={`${!linkToggle ? 'd-none' : 'd-inline'} d-sm-inline col-lg-2 col-md-2 col-sm-6 pb-2`}>
                                 <h4>
-                                    <a href="#" title="Vai alla pagina: Novità">Novità</a>
+                                    <a>Novità</a>
                                 </h4>
                                 <div className="link-list-wrapper">
                                     <ul className="footer-list link-list clearfix">
@@ -56,7 +56,7 @@ function Footer() {
                             </div>
                             <div className={`${!linkToggle ? 'd-none' : 'd-inline'} d-sm-inline col-lg-4 col-md-4 col-sm-6 pb-2`}>
                                 <h4>
-                                    <a href="#" title="Vai alla pagina: Documenti">Documenti</a>
+                                    <a>Documenti</a>
                                 </h4>
                                 <div className="link-list-wrapper">
                                     <ul className="footer-list link-list clearfix">
@@ -74,7 +74,7 @@ function Footer() {
                     <section className="py-4 border-white border-top ">
                         <div className="row">
                             <div className="col-lg-4 col-md-4 pb-2">
-                                <h4><a href="#" title="Vai alla pagina: Contatti">Contatti</a></h4>
+                                <h3>Contatti</h3>
                                 <p >
                                     <strong>Comune di Lorem Ipsum</strong><br />
                                     Piazza Lorem ipsum dolor, 23 09872 Nome della città<br />
@@ -92,7 +92,7 @@ function Footer() {
                             </div>
 
                             <div className="d-none d-sm-inline col-lg-2 col-md-2 pb-2">
-                                <h4><a href="#" title="Vai alla pagina: Lorem Ipsum">Lorem Ipsum</a></h4>
+                                <h4><a>Lorem Ipsum</a></h4>
                                 <div className="link-list-wrapper">
                                     <ul className="footer-list link-list clearfix">
                                         <li><a className="list-item" href="#" title="Vai alla pagina: Pagamenti">Dichiarazione di Accessibilità </a></li>
@@ -103,7 +103,7 @@ function Footer() {
                             </div>
 
                             <div className="d-none d-sm-inline col-lg-2 col-md-2 pb-2">
-                                <h4><a href="#" title="Vai alla pagina: Lorem Ipsum">Lorem Ipsum</a></h4>
+                                <h4><a>Lorem Ipsum</a></h4>
                                 <div className="link-list-wrapper">
                                     <ul className="footer-list link-list clearfix">
                                         <li><a className="list-item" href="#" title="Vai alla pagina: Pagamenti">Et vivamus sit </a></li>
@@ -117,7 +117,7 @@ function Footer() {
 
                             <div className="col-lg-4 col-md-4 pb-2">
                                 <div className="pb-2 border-black border-sm-white border-top ">
-                                    <h4><a href="#" title="Vai alla pagina: Seguici su">Seguici su</a></h4>
+                                    <h4><a>Seguici su</a></h4>
                                     <div className="d-flex gap-4">
                                         <FacebookLogo aria-label="Facebook" />
                                         <InstaLogo aria-label="Instagram" />
@@ -125,7 +125,7 @@ function Footer() {
                                         <YouTubeLogo aria-label="YouTube" />
                                     </div>
                                     <div className='border-black border-sm-white border-top mt-5'>
-                                        <h4 className='mt-2'><a href="#" title="Vai alla pagina: NEWSLETTER">NEWSLETTER</a></h4>
+                                        <h4 className='mt-2'><a>NEWSLETTER</a></h4>
                                         <form className="newsletter-form">
                                             <div className="form-group">
                                                 <div className="input-group">

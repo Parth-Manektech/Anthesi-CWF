@@ -7,11 +7,11 @@
 
     // font-size: 10px !important;
     .it-footer-main {
-        background-color: $primary--color;
+        background-color: $primary--color--footer;
     }
 
     .it-footer-small-prints {
-        background-color: $secondary--color;
+        background-color: $secondary--color--footer;
     }
 
     .Link-button {
@@ -25,7 +25,11 @@
     }
 
     a {
-        font-size: .7em !important;
+        font-size: 1em !important;
+
+        &:hover {
+            text-decoration: none !important;
+        }
     }
 
     p {
