@@ -23,7 +23,6 @@ function SelectAddress() {
 
         const regex = /^COL.{4}$/;
 
-
         params.forEach((value, key) => {
             if (regex.test(value)) {
                 paramsObj[key] = value;
@@ -34,7 +33,6 @@ function SelectAddress() {
 
         setQueryParams(paramsObj);
         setQueryParamsInput(noChangeInputParams);
-
 
     }, []);
 
@@ -83,7 +81,6 @@ function SelectAddress() {
         refetchOnWindowFocus: false,
     })
 
-
     // const onSubmit = async (data) => {
     //     console.log('data', data)
     //     let FinalData = data
@@ -113,7 +110,9 @@ function SelectAddress() {
     useEffect(() => {
         if (watch('state')?.label !== "Italia" && watch('state') !== undefined) {
             setValue('province', 'EE')
-            setValue(queryParams?.province, "EE")
+            if (queryParams.province) {
+                setValue(queryParams?.province, "EE")
+            }
         }
     }, [watch('state')])
 
@@ -203,7 +202,7 @@ function SelectAddress() {
                                         closeMenuOnSelect={true}
                                         onChange={(e) => {
                                             onChange(e);
-                                            if (queryParams) {
+                                            if (queryParams && queryParams.state) {
                                                 setValue(queryParams?.state, e?.label)
                                                 setValue(queryParams?.stateCode, e?.value)
                                                 setValue(queryParams?.province, "")
@@ -286,7 +285,7 @@ function SelectAddress() {
                                                 closeMenuOnSelect={true}
                                                 onChange={(e) => {
                                                     onChange(e);
-                                                    if (queryParams) {
+                                                    if (queryParams && queryParams.province) {
                                                         setValue(queryParams?.province, e?.label)
                                                         setValue(queryParams?.municipality, '')
                                                         setValue(queryParams?.municipalityCode, '')
@@ -331,7 +330,7 @@ function SelectAddress() {
                                             placeholder="Aggiungere Comune..."
                                             onChange={(e) => {
                                                 onChange(e);
-                                                if (queryParams) {
+                                                if (queryParams && queryParams.municipality) {
                                                     setValue(queryParams?.municipality, e.target.value)
                                                     const Time = new Date().toLocaleTimeString([], { hour12: false });
                                                     const Day = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
@@ -390,7 +389,7 @@ function SelectAddress() {
                                                 onChange(e)
                                                 const Time = new Date().toLocaleTimeString([], { hour12: false });
                                                 const Day = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
-                                                if (queryParams) {
+                                                if (queryParams && queryParams.municipality) {
                                                     setValue(queryParams?.municipality, e?.label)
                                                     setValue(queryParams?.municipalityCode, e?.value)
                                                     const municipalityJsonobj = e;
