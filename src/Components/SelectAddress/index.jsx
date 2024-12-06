@@ -131,20 +131,20 @@ function SelectAddress() {
             params.append(key, encodeToISO88591(value)); // Encode each value
         });
 
-        // Submit the data as an ISO-8859-1 encoded payload
-        fetch(form.action, {
-            method: form.method,
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded; charset=ISO-8859-1'
-            },
-            body: params.toString()
-        }).then(response => {
-            if (response.ok) {
-                console.log('Form submitted successfully!');
-            } else {
-                console.error('Failed to submit form:', response.statusText);
-            }
-        }).catch(err => console.error('Error:', err));
+        // // Submit the data as an ISO-8859-1 encoded payload
+        // fetch(form.action, {
+        //     method: form.method,
+        //     headers: {
+        //         'Content-Type': 'application/x-www-form-urlencoded; charset=ISO-8859-1'
+        //     },
+        //     body: params.toString()
+        // }).then(response => {
+        //     if (response.ok) {
+        //         console.log('Form submitted successfully!');
+        //     } else {
+        //         console.error('Failed to submit form:', response.statusText);
+        //     }
+        // }).catch(err => console.error('Error:', err));
         return true;
     }
 
