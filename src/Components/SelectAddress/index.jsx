@@ -116,17 +116,42 @@ function SelectAddress() {
         }
     }, [watch('state')])
 
-    function logFormData() {
+    function logFormData(e) {
         // e.preventDefault()
-        setFormLoading(true)
-        // const form = document.getElementById('CWF-form');
-        // const formData = new FormData(form);
+        setFormLoading(true);
+        e.preventDefault();
 
-        // // Log form data key-value pairs
-        // for (let pair of formData.entries()) {
-        //     console.log(pair[0] + ': ' + pair[1]);
-        // }
+        // Create a FormData object from the form
+        const form = document.getElementById('CWF-form');
+        const formData = new FormData(form);
+
+        // Convert FormData to a URL-encoded string
+        const params = new URLSearchParams();
+        formData.forEach((value, key) => {
+            params.append(key, encodeToISO88591(value)); // Encode each value
+        });
+
+        // Submit the data as an ISO-8859-1 encoded payload
+        fetch(form.action, {
+            method: form.method,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=ISO-8859-1'
+            },
+            body: params.toString()
+        }).then(response => {
+            if (response.ok) {
+                console.log('Form submitted successfully!');
+            } else {
+                console.error('Failed to submit form:', response.statusText);
+            }
+        }).catch(err => console.error('Error:', err));
         return true;
+    }
+
+    function encodeToISO88591(data) {
+        // Utility to encode data to ISO-8859-1
+        if (data) { return unescape(encodeURIComponent(data)); } else { return "" }
+
     }
 
     return (
@@ -148,7 +173,7 @@ function SelectAddress() {
                                     name={Value}
                                     type="hidden"
                                     onChange={onChange}
-                                    value={value}
+                                    value={encodeToISO88591(value)}
                                 />
                             )}
                         />
@@ -347,7 +372,8 @@ function SelectAddress() {
                                                             }
                                                         }
                                                     }
-                                                    setValue(queryParams?.municipalityJson, JSON.stringify(FinalMunicipalityJSON))
+                                                    setValue(queryParams?.municipalityJson, JSON.stringify(FinalMunicipalityJSON));
+
                                                 }
                                             }}
                                         />
@@ -409,7 +435,10 @@ function SelectAddress() {
                                                             }
                                                         }
                                                     }
-                                                    setValue(queryParams?.municipalityJson, JSON.stringify(FinalMunicipalityJSON))
+                                                    setValue(queryParams?.municipalityJson, JSON.stringify(FinalMunicipalityJSON));
+                                                    const temp = JSON.stringify(FinalMunicipalityJSON);
+                                                    const temp2 = JSON.parse(temp);
+                                                    console.log(temp2)
                                                 }
                                             }}
                                         />
