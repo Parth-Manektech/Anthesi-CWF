@@ -116,50 +116,43 @@ function SelectAddress() {
         }
     }, [watch('state')])
 
-    function logFormData(e) {
-        // e.preventDefault()
+    function logFormData() {
+
+        // e.preventDefault();
         setFormLoading(true);
-        e.preventDefault();
-
-        // Create a FormData object from the form
-        const form = document.getElementById('CWF-form');
-        const formData = new FormData(form);
-
-        // Convert FormData to a URL-encoded string
-        const params = new URLSearchParams();
-        formData.forEach((value, key) => {
-            params.append(key, encodeToISO88591(value)); // Encode each value
-        });
-
-        // // Submit the data as an ISO-8859-1 encoded payload
-        // fetch(form.action, {
-        //     method: form.method,
-        //     headers: {
-        //         'Content-Type': 'application/x-www-form-urlencoded; charset=ISO-8859-1'
-        //     },
-        //     body: params.toString()
-        // }).then(response => {
-        //     if (response.ok) {
-        //         console.log('Form submitted successfully!');
-        //     } else {
-        //         console.error('Failed to submit form:', response.statusText);
-        //     }
-        // }).catch(err => console.error('Error:', err));
         return true;
     }
 
     function encodeToISO88591(data) {
-        // Utility to encode data to ISO-8859-1
+        // Encode data to ISO-8859-1
         if (data) { return unescape(encodeURIComponent(data)); } else { return "" }
-
     }
+
+    // function decodeFromISO88591(data) {
+    //     // Decode data from ISO-8859-1 to UTF-8
+    //     if (data) { return decodeURIComponent(escape(data)); } else { return "" }
+    // }
+
+
+    // const originalText = "Café";
+    const originalText = "Antey-Saint-AndrÃ¨";
+    // const originalText = "Antey-Saint-Andrè";
+
+    const encodedText = encodeToISO88591(originalText);
+    console.log("Encoded to ISO-8859-1:", encodedText);
+
+    // const decodedText = decodeFromISO88591(encodedText);
+    // console.log("Decoded back to UTF-8:", decodedText);
+
+
+
 
     return (
         <>
             {(isFetchingStateData || isLoadingStateData || formLoading) && <Loader />}
             <h2 className='mt-3'>Selezionare Stato, Provincia e Comune</h2>
             <h5 className='fw-normal'>ID richiesta: 12345</h5>
-            <form className='step-one mt-5' id="CWF-form" autoComplete='off' onSubmit={(e) => logFormData(e)} method="post" action='https://developer01.elixdev.it/rwe2/ComeBackToElixAndSave'>
+            <form className='step-one mt-5' id="CWF-form" autoComplete='off' onSubmit={(e) => logFormData(e)} method="post" action='https://developer01.elixdev.it/rwe2/ComeBackToElixAndSave' acceptCharset="ISO-8859-1">
                 {Object.entries(queryParams).map(([key, Value]) => {
                     const regex = /^COL.{4}$/;
                     if (regex.test(Value)) {
@@ -173,7 +166,13 @@ function SelectAddress() {
                                     name={Value}
                                     type="hidden"
                                     onChange={onChange}
-                                    value={encodeToISO88591(value)}
+                                    value={value}
+                                // onChange={(e) => {
+                                //     console.log('e.target.value', e.target.value)
+                                //     const encodedValue = encodeToISO88591(e.target.value);
+                                //     onChange(encodedValue); // Update the form state with the encoded value
+                                // }}
+                                // value={encodeToISO88591(value)}
                                 />
                             )}
                         />
